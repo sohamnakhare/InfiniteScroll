@@ -11,34 +11,30 @@ class TestComponent extends React.Component {
        this.state = {
            data:[],
            pageNum: 1,
-           pageSize: 20
+           pageSize: 100
        };
-       for (var index = 0; index < 1000; index++) {
+       for (var index = 0; index < 10000; index++) {
             this.state.data.push(index);           
        }
-       this.state.lazyData = this.state.data.slice(0, this.state.pageNum * this.state.pageSize);
        this.loadMore = this.loadMore.bind(this);
    } 
 
    loadMore() {
-       if(this.state.pageNum<100){
-        this.setState({lazyData: this.state.data.slice(0, this.state.pageNum * this.state.pageSize)});
-       }
+      this.setState({pageNum: this.state.pageNum + 1});
    }
 
     render() {
         return(
-            <div style={{height:'100px', overflow:'scroll'}}>
-                <InfiniteScroll loadMore={this.loadMore}>
-                        <ul>
-                            {
-                                this.state.lazyData.map((item, i)=>{
-                                    return (<li key={i}>{item}</li>)
-                                })
-                            }
-                        </ul>
-                </InfiniteScroll>
-            </div>
+			<InfiniteScroll loadMore={this.loadMore} useWindow={true}>
+				<ul>
+					{
+						this.state.data.slice(0, this.state.pageNum * this.state.pageSize)
+							.map((item, i)=>{
+								return (<li key={i}>{item}</li>)
+						})
+					}
+				</ul>
+			</InfiniteScroll>
         )
     }
 }

@@ -5,7 +5,6 @@ export default class InfiniteScroll extends Component {
   static propTypes = {
     children: PropTypes.oneOfType([PropTypes.object, PropTypes.array])
       .isRequired,
-    initialLoad: PropTypes.bool,
     loader: PropTypes.object,
     loadMore: PropTypes.func.isRequired,
     ref: PropTypes.func,
@@ -15,9 +14,8 @@ export default class InfiniteScroll extends Component {
   };
 
   static defaultProps = {
-    initialLoad: true,
     ref: null,
-    threshold: 250,
+    threshold: 5,
     useWindow: false,
     useCapture: false,
     loader: null,
@@ -71,11 +69,7 @@ export default class InfiniteScroll extends Component {
       this.scrollListener,
       this.props.useCapture,
     );
-    scrollEl.removeEventListener(
-      'resize',
-      this.scrollListener,
-      this.props.useCapture,
-    );
+   
   }
 
   attachScrollListener() {
@@ -84,26 +78,13 @@ export default class InfiniteScroll extends Component {
     if (this.props.useWindow === false) {
       scrollEl = this.scrollComponent.parentNode;
     }
-
-    scrollEl.addEventListener(
-      'mousewheel',
-      this.mousewheelListener,
-      this.props.useCapture,
-    );
+   
     scrollEl.addEventListener(
       'scroll',
       this.scrollListener,
       this.props.useCapture,
     );
-    scrollEl.addEventListener(
-      'resize',
-      this.scrollListener,
-      this.props.useCapture,
-    );
-
-    if (this.props.initialLoad) {
-      this.scrollListener();
-    }
+    
   }
 
   mousewheelListener(e) {
@@ -151,7 +132,6 @@ export default class InfiniteScroll extends Component {
   render() {
     const {
       children,
-      initialLoad,
       loadMore,
       ref,
       threshold,
